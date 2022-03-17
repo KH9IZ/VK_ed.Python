@@ -16,8 +16,7 @@ class TicTacGame:
         ___|___|___
         7  |8  |9  
          {} | {} | {} 
-           |   |  
-        """
+           |   |   """
         print(template.format(*(cell for row in self.field for cell in row)))
 
     def validate_input(self, s):

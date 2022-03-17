@@ -1,72 +1,193 @@
+from io import StringIO
+import sys
 import unittest
+from unittest.mock import patch
 from tictactoe import TicTacGame
 
 class TicTacTestCase(unittest.TestCase):
 
+    def setUp(self):
+        self.game = TicTacGame()
+        self.game.field = [[' ', ' ', ' '], [' ', ' ', ' '], [' ', ' ', ' ']]
+
     def test_validate_input(self):
-        game = TicTacGame()
-        self.assertFalse(game.validate_input('QQ'))
-        self.assertFalse(game.validate_input('0'))
-        self.assertFalse(game.validate_input('-1'))
-        self.assertFalse(game.validate_input('10'))
-        self.assertFalse(game.validate_input('1.0'))
+        self.assertFalse(self.game.validate_input('QQ'))
+        self.assertFalse(self.game.validate_input('0'))
+        self.assertFalse(self.game.validate_input('-1'))
+        self.assertFalse(self.game.validate_input('10'))
+        self.assertFalse(self.game.validate_input('1.0'))
 
-        for i in range(1, 10):
-            self.assertTrue(game.validate_input(str(i)))
-
-        game.field[0][0] = 'X'
-        self.assertFalse(game.validate_input('1'))
+        self.assertTrue(self.game.validate_input('1'))
+        self.assertTrue(self.game.validate_input('2'))
+        self.assertTrue(self.game.validate_input('3'))
+        self.assertTrue(self.game.validate_input('4'))
+        self.assertTrue(self.game.validate_input('5'))
+        self.assertTrue(self.game.validate_input('6'))
+        self.assertTrue(self.game.validate_input('7'))
+        self.assertTrue(self.game.validate_input('8'))
+        self.assertTrue(self.game.validate_input('9'))
+        
+        self.game.field[0][0] = 'X'
+        self.assertFalse(self.game.validate_input('1'))
 
     def test_check_winner(self):
-        game = TicTacGame()
-        game.field = [['X', 'X', 'X'],
+        self.game.field = [['X', 'X', 'X'],
                       [' ', ' ', 'O'],
                       [' ', 'O', ' ']]
-        self.assertEqual(game.check_winner(), 'X')
+        self.assertEqual(self.game.check_winner(), 'X')
         
-        game.field = [['X', ' ', 'X'],
+        self.game.field = [['X', ' ', 'X'],
                       ['O', 'O', 'O'],
                       [' ', 'X', ' ']]
-        self.assertEqual(game.check_winner(), 'O')
+        self.assertEqual(self.game.check_winner(), 'O')
 
-        game.field = [[' ', 'O', ' '],
+        self.game.field = [[' ', 'O', ' '],
                       [' ', 'O', ' '],
                       ['X', 'X', 'X']]
-        self.assertEqual(game.check_winner(), 'X')
+        self.assertEqual(self.game.check_winner(), 'X')
 
-        game.field = [['X', 'O', ' '],
+        self.game.field = [['X', 'O', ' '],
                       ['X', 'O', ' '],
                       ['X', ' ', ' ']]
-        self.assertEqual(game.check_winner(), 'X')
+        self.assertEqual(self.game.check_winner(), 'X')
 
-        game.field = [[' ', 'O', 'X'],
+        self.game.field = [[' ', 'O', 'X'],
                       ['X', 'O', ' '],
                       [' ', 'O', 'X']]
-        self.assertEqual(game.check_winner(), 'O')
-        game.field = [['O', 'O', 'X'],
+        self.assertEqual(self.game.check_winner(), 'O')
+        self.game.field = [['O', 'O', 'X'],
                       [' ', 'O', 'X'],
                       [' ', ' ', 'X']]
-        self.assertEqual(game.check_winner(), 'X')
+        self.assertEqual(self.game.check_winner(), 'X')
         
-        game.field = [['X', 'O', ' '],
+        self.game.field = [['X', 'O', ' '],
                       [' ', 'X', ' '],
                       ['O', ' ', 'X']]
-        self.assertEqual(game.check_winner(), 'X')
-        game.field = [['O', 'O', 'X'],
+        self.assertEqual(self.game.check_winner(), 'X')
+        self.game.field = [['O', 'O', 'X'],
                       [' ', 'X', ' '],
                       ['X', ' ', ' ']]
-        self.assertEqual(game.check_winner(), 'X')
+        self.assertEqual(self.game.check_winner(), 'X')
 
-        game.field = [['O', 'O', 'X'],
+        self.game.field = [['O', 'O', 'X'],
                       ['X', 'X', 'O'],
                       ['O', 'X', 'X']]
-        self.assertEqual(game.check_winner(), ' ')
+        self.assertEqual(self.game.check_winner(), ' ')
 
-        game.field = [[' ', 'O', 'X'],
+        self.game.field = [[' ', 'O', 'X'],
                       ['X', 'X', 'O'],
                       ['O', 'X', 'X']]
-        self.assertFalse(game.check_winner())
-        game.field = [['O', 'O', 'X'],
+        self.assertFalse(self.game.check_winner())
+        self.game.field = [['O', 'O', 'X'],
                       ['X', ' ', 'O'],
                       ['O', 'X', 'X']]
-        self.assertFalse(game.check_winner())
+        self.assertFalse(self.game.check_winner())
+    
+    def test_show_board(self):
+        new_out = StringIO()
+        old_out = sys.stdout
+        sys.stdout = new_out
+        self.game.field = [[' ', 'X', ' '],
+                      ['X', ' ', 'X'],
+                      [' ', 'X', ' ']]
+        self.game.show_board()
+        sys.stdout = old_out
+        self.assertEqual(new_out.getvalue(), """
+        1  |2  |3  
+           | X |   
+        ___|___|___
+        4  |5  |6  
+         X |   | X 
+        ___|___|___
+        7  |8  |9  
+           | X |   
+           |   |   \n""")
+
+    def test_start_game(self):
+        new_in, new_out = StringIO("1\n5\n2\n2\n4\n3\n"), StringIO()
+        old_in, old_out = sys.stdin, sys.stdout
+        sys.stdin.flush()
+        sys.stdout.flush()
+        sys.stdin, sys.stdout = new_in, new_out
+        self.game.start_game()
+        sys.stdin, sys.stdout = old_in, old_out
+        expect = """
+        1  |2  |3  
+           |   |   
+        ___|___|___
+        4  |5  |6  
+           |   |   
+        ___|___|___
+        7  |8  |9  
+           |   |   
+           |   |   
+Player X's move.
+Enter number in [1, 9]: 
+        1  |2  |3  
+         X |   |   
+        ___|___|___
+        4  |5  |6  
+           |   |   
+        ___|___|___
+        7  |8  |9  
+           |   |   
+           |   |   
+Player O's move.
+Enter number in [1, 9]: 
+        1  |2  |3  
+         X |   |   
+        ___|___|___
+        4  |5  |6  
+           | O |   
+        ___|___|___
+        7  |8  |9  
+           |   |   
+           |   |   
+Player X's move.
+Enter number in [1, 9]: 
+        1  |2  |3  
+         X | X |   
+        ___|___|___
+        4  |5  |6  
+           | O |   
+        ___|___|___
+        7  |8  |9  
+           |   |   
+           |   |   
+Player O's move.
+Enter number in [1, 9]: Invalid input.
+
+        1  |2  |3  
+         X | X |   
+        ___|___|___
+        4  |5  |6  
+           | O |   
+        ___|___|___
+        7  |8  |9  
+           |   |   
+           |   |   
+Player O's move.
+Enter number in [1, 9]: 
+        1  |2  |3  
+         X | X |   
+        ___|___|___
+        4  |5  |6  
+         O | O |   
+        ___|___|___
+        7  |8  |9  
+           |   |   
+           |   |   
+Player X's move.
+Enter number in [1, 9]: 
+        1  |2  |3  
+         X | X | X 
+        ___|___|___
+        4  |5  |6  
+         O | O |   
+        ___|___|___
+        7  |8  |9  
+           |   |   
+           |   |   
+Player X won!\n"""
+        self.assertEqual(new_out.getvalue(), expect)
+
