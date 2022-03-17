@@ -1,7 +1,6 @@
 from io import StringIO
 import sys
 import unittest
-from unittest.mock import patch
 from tictactoe import TicTacGame
 
 class TicTacTestCase(unittest.TestCase):
@@ -26,7 +25,7 @@ class TicTacTestCase(unittest.TestCase):
         self.assertTrue(self.game.validate_input('7'))
         self.assertTrue(self.game.validate_input('8'))
         self.assertTrue(self.game.validate_input('9'))
-        
+
         self.game.field[0][0] = 'X'
         self.assertFalse(self.game.validate_input('1'))
 
@@ -35,7 +34,7 @@ class TicTacTestCase(unittest.TestCase):
                       [' ', ' ', 'O'],
                       [' ', 'O', ' ']]
         self.assertEqual(self.game.check_winner(), 'X')
-        
+
         self.game.field = [['X', ' ', 'X'],
                       ['O', 'O', 'O'],
                       [' ', 'X', ' ']]
@@ -59,7 +58,7 @@ class TicTacTestCase(unittest.TestCase):
                       [' ', 'O', 'X'],
                       [' ', ' ', 'X']]
         self.assertEqual(self.game.check_winner(), 'X')
-        
+
         self.game.field = [['X', 'O', ' '],
                       [' ', 'X', ' '],
                       ['O', ' ', 'X']]
@@ -82,7 +81,7 @@ class TicTacTestCase(unittest.TestCase):
                       ['X', ' ', 'O'],
                       ['O', 'X', 'X']]
         self.assertFalse(self.game.check_winner())
-    
+
     def test_show_board(self):
         new_out = StringIO()
         old_out = sys.stdout
@@ -190,4 +189,3 @@ Enter number in [1, 9]:
            |   |   
 Player X won!\n"""
         self.assertEqual(new_out.getvalue(), expect)
-

@@ -1,6 +1,6 @@
 class TicTacGame:
 
-    field = [[' ', ' ', ' '], 
+    field = [[' ', ' ', ' '],
              [' ', ' ', ' '],
              [' ', ' ', ' ']]
 
@@ -19,9 +19,9 @@ class TicTacGame:
            |   |   """
         print(template.format(*(cell for row in self.field for cell in row)))
 
-    def validate_input(self, s):
+    def validate_input(self, inp):
         try:
-            num = int(s)
+            num = int(inp)
         except ValueError:
             return False
         col = (num - 1) % 3
@@ -30,7 +30,6 @@ class TicTacGame:
 
     def start_game(self):
         players = ['X', 'O']
-        cur_player = players[0]
         i = 0
         while not (winner := self.check_winner()):
             self.show_board()
@@ -59,7 +58,7 @@ class TicTacGame:
                 return self.field[i][i]
         if self.field[0][0] == self.field[1][1] == self.field[2][2] != ' ' or \
             self.field[2][0] == self.field[1][1] == self.field[0][2] != ' ':
-                return self.field[1][1]
+            return self.field[1][1]
         if not [cell for row in self.field for cell in row if cell == ' ']:
             return ' '
         return False
@@ -69,4 +68,3 @@ class TicTacGame:
 if __name__ == "__main__":
     game = TicTacGame()
     game.start_game()
-
