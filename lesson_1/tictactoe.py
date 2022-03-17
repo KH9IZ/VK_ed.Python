@@ -57,7 +57,6 @@ class TicTacGame:
         cols = [*zip(*self.field)]
         for i in range(3):
             if checker(rows[i]) or checker(cols[i]):
-                print(i)
                 return self.field[i][i]
         if self.field[0][0] == self.field[1][1] == self.field[2][2] != ' ' or \
             self.field[2][0] == self.field[1][1] == self.field[0][2] != ' ':
