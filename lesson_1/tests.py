@@ -189,3 +189,6 @@ Enter number in [1, 9]:
            |   |   
 Player X won!\n"""
         self.assertEqual(new_out.getvalue(), expect)
+
+if __name__ == "__main__":
+    unittest.main()

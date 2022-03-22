@@ -49,12 +49,15 @@ class TicTacGame:
         else:
             print("Draw!")
 
+    @staticmethod
+    def __checker(seq):
+        return seq.count(seq[0]) == len(seq) and seq[0] != ' '
+
     def check_winner(self):
-        checker = lambda seq: seq.count(seq[0]) == len(seq) and seq[0] != ' '
         rows = self.field
         cols = [*zip(*self.field)]
         for i in range(3):
-            if checker(rows[i]) or checker(cols[i]):
+            if self.__checker(rows[i]) or self.__checker(cols[i]):
                 return self.field[i][i]
         if self.field[0][0] == self.field[1][1] == self.field[2][2] != ' ' or \
             self.field[2][0] == self.field[1][1] == self.field[0][2] != ' ':
