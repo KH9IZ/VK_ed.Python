@@ -1,5 +1,16 @@
 class TicTacGame:
 
+    template = """
+    1  |2  |3
+     {} | {} | {}
+    ___|___|___
+    4  |5  |6
+     {} | {} | {}
+    ___|___|___
+    7  |8  |9
+     {} | {} | {}
+       |   |"""
+
     field = [[' ', ' ', ' '],
              [' ', ' ', ' '],
              [' ', ' ', ' ']]
@@ -7,17 +18,7 @@ class TicTacGame:
     prompt = "Enter number in [1, 9]: "
 
     def show_board(self):
-        template = """
-        1  |2  |3
-         {} | {} | {}
-        ___|___|___
-        4  |5  |6
-         {} | {} | {}
-        ___|___|___
-        7  |8  |9
-         {} | {} | {}
-           |   |"""
-        print(template.format(*(cell for row in self.field for cell in row)))
+        print(self.template.format(*(cell for row in self.field for cell in row)))
 
     def validate_input(self, inp):
         try:
@@ -64,7 +65,7 @@ class TicTacGame:
             return self.field[1][1]
         if not [cell for row in self.field for cell in row if cell == ' ']:
             return ' '
-        return False
+        return ''
 
 
 if __name__ == "__main__":
