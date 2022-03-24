@@ -8,15 +8,15 @@ class TicTacGame:
 
     def show_board(self):
         template = """
-        1  |2  |3  
-         {} | {} | {} 
+        1  |2  |3
+         {} | {} | {}
         ___|___|___
-        4  |5  |6  
-         {} | {} | {} 
+        4  |5  |6
+         {} | {} | {}
         ___|___|___
-        7  |8  |9  
-         {} | {} | {} 
-           |   |   """
+        7  |8  |9
+         {} | {} | {}
+           |   |"""
         print(template.format(*(cell for row in self.field for cell in row)))
 
     def validate_input(self, inp):
@@ -41,7 +41,7 @@ class TicTacGame:
             num = int(raw_input) - 1
             col = num % 3
             row = num // 3
-            self.field[row][col] = players[ i % len(players) ]
+            self.field[row][col] = players[i % len(players)]
             i += 1
         self.show_board()
         if winner in players:
@@ -60,12 +60,11 @@ class TicTacGame:
             if self.__checker(rows[i]) or self.__checker(cols[i]):
                 return self.field[i][i]
         if self.field[0][0] == self.field[1][1] == self.field[2][2] != ' ' or \
-            self.field[2][0] == self.field[1][1] == self.field[0][2] != ' ':
+           self.field[2][0] == self.field[1][1] == self.field[0][2] != ' ':
             return self.field[1][1]
         if not [cell for row in self.field for cell in row if cell == ' ']:
             return ' '
         return False
-
 
 
 if __name__ == "__main__":
