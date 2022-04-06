@@ -7,31 +7,77 @@ from custom_list import CustomList
 class CustomListTestCase(unittest.TestCase):
     """Main test case for CustomList"""
 
+    def assert_list_equal(self, list1, list2):
+        """Per-elemental lists comparison."""
+        self.assertEqual(len(list1), len(list2))
+        if len(list1) == len(list2):
+            for i, j in zip(list1, list2):
+                self.assertEqual(i, j)
+
     def test_simple_addsub(self):
         """Test addition and subtraction between CustomLists"""
-        temp = CustomList([5, 1, 3, 7])
-        check = temp - CustomList([1, 2, 7])
-        self.assertListEqual(temp, CustomList([5, 1, 3, 7]))
-        expect = CustomList([4, -1, -4, 7])
-        self.assertListEqual(check, expect)
-        check = CustomList([5, 1, 3, 7]) + CustomList([1, 2, 7])
-        expect = CustomList([6, 3, 10, 7])
-        self.assertListEqual(check, expect)
+        # Equal size
+        cust_list_3 = CustomList([1, 2, 3])
+        cust_list_3_dup = CustomList([3, 2, 1])
+        self.assert_list_equal(cust_list_3 + cust_list_3_dup, [4] * 3)
+        self.assert_list_equal(cust_list_3, [1, 2, 3])
+        self.assert_list_equal(cust_list_3_dup, [3, 2, 1])
+        self.assert_list_equal(cust_list_3 - cust_list_3_dup, [-2, 0, 2])
+        self.assert_list_equal(cust_list_3, [1, 2, 3])
+        self.assert_list_equal(cust_list_3_dup, [3, 2, 1])
+
+        # Left longer
+        cust_list_2 = CustomList([3, 1])
+        self.assert_list_equal(cust_list_3 + cust_list_2, [4, 3, 3])
+        self.assert_list_equal(cust_list_3, [1, 2, 3])
+        self.assert_list_equal(cust_list_2, [3, 1])
+        self.assert_list_equal(cust_list_3 - cust_list_2, [-2, 1, 3])
+        self.assert_list_equal(cust_list_3, [1, 2, 3])
+        self.assert_list_equal(cust_list_2, [3, 1])
+
+        # Right longer
+        self.assert_list_equal(cust_list_2 + cust_list_3, [4, 3, 3])
+        self.assert_list_equal(cust_list_3, [1, 2, 3])
+        self.assert_list_equal(cust_list_2, [3, 1])
+        self.assert_list_equal(cust_list_2 - cust_list_3, [2, -1, -3])
+        self.assert_list_equal(cust_list_3, [1, 2, 3])
+        self.assert_list_equal(cust_list_2, [3, 1])
 
     def test_unobvious_addsub(self):
         """Test addition and subtraction between CustomList and regular list"""
-        check = [1, 2] + CustomList([3, 4])
-        expect = CustomList([4, 6])
-        self.assertListEqual(check, expect)
-        check = [1, 2] - CustomList([3, 4])
-        expect = CustomList([-2, -2])
-        self.assertListEqual(check, expect)
-        check = CustomList([3, 4]) + [1, 2]
-        expect = CustomList([4, 6])
-        self.assertListEqual(check, expect)
-        check = CustomList([3, 4]) - [1, 2]
-        expect = CustomList([2, 2])
-        self.assertListEqual(check, expect)
+        # Equal size
+        cust_list_3 = CustomList([1, 2, 3])
+        list_3 = [3, 2, 1]
+        self.assert_list_equal(cust_list_3 + list_3, [4] * 3)
+        self.assert_list_equal(cust_list_3, [1, 2, 3])
+        self.assert_list_equal(list_3 + cust_list_3, [4] * 3)
+        self.assert_list_equal(cust_list_3, [1, 2, 3])
+        self.assert_list_equal(cust_list_3 - list_3, [-2, 0, 2])
+        self.assert_list_equal(cust_list_3, [1, 2, 3])
+        self.assert_list_equal(list_3 - cust_list_3, [2, 0, -2])
+        self.assert_list_equal(cust_list_3, [1, 2, 3])
+
+        # Left longer
+        cust_list_2 = CustomList([3, 1])
+        self.assert_list_equal(list_3 + cust_list_2, [6, 3, 1])
+        self.assert_list_equal(cust_list_2, [3, 1])
+        self.assert_list_equal(list_3 - cust_list_2, [0, 1, 1])
+        self.assert_list_equal(cust_list_2, [3, 1])
+        list_2 = [3, 1]
+        self.assert_list_equal(cust_list_3 + list_2, [4, 3, 3])
+        self.assert_list_equal(cust_list_3, [1, 2, 3])
+        self.assert_list_equal(cust_list_3 - list_2, [-2, 1, 3])
+        self.assert_list_equal(cust_list_3, [1, 2, 3])
+
+        # Right longer
+        self.assert_list_equal(cust_list_2 + list_3, [6, 3, 1])
+        self.assert_list_equal(cust_list_2, [3, 1])
+        self.assert_list_equal(cust_list_2 - list_3, [0, -1, -1])
+        self.assert_list_equal(cust_list_2, [3, 1])
+        self.assert_list_equal(list_2 + cust_list_3, [4, 3, 3])
+        self.assert_list_equal(cust_list_3, [1, 2, 3])
+        self.assert_list_equal(list_2 - cust_list_3, [2, -1, -3])
+        self.assert_list_equal(cust_list_3, [1, 2, 3])
 
     def test_equality(self):
         """Test equality of CustomLists"""
