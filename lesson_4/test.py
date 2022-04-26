@@ -1,18 +1,21 @@
 import unittest
+from dataclasses import dataclass
+
 import custom_meta
 import descriptors
 
 
 class CustomTestCase(unittest.TestCase):
+    # pylint: disable=no-member
     def test_magic_methods(self):
         calls = []
 
         class TestClass(metaclass=custom_meta.CustomMeta):
-            def __init__(self, a):
-                a.append("init")
+            def __init__(self, val):
+                val.append("init")
 
-            def __eq__(self, a):
-                a.append("eq")
+            def __eq__(self, val):
+                val.append("eq")
                 return True
 
             def __hash__(self):
@@ -22,14 +25,20 @@ class CustomTestCase(unittest.TestCase):
             def __del__(self):
                 calls.append("del")
 
-        t = TestClass(calls)
-        t == calls
-        hash(t)
-        del t
-        self.assertListEqual(calls, ["init", "eq", "hash", "del"])
+            def __str__(self):
+                calls.append("str")
+                return ""
+
+        temp = TestClass(calls)
+        self.assertTrue(temp == calls)
+        self.assertEqual(str(temp), "")
+        hash(temp)
+        del temp
+        self.assertListEqual(calls, ["init", "eq", "str", "hash", "del"])
 
     def test_regular_attributes(self):
         class FunnyClass(metaclass=custom_meta.CustomMeta):
+            # pylint: disable=too-few-public-methods
             bourbon = "whiskey"
 
             def get_bourbon(self):
@@ -37,12 +46,13 @@ class CustomTestCase(unittest.TestCase):
 
             vodka = None
 
+            @dataclass
             class B52:
                 coffee = True
 
         FunnyClass.absent = "70%"
         alcogolic = FunnyClass()
-        alcogolic.beer = "good"
+        alcogolic.beer = "good"  # pylint: disable=attribute-defined-outside-init
         self.assertEqual(alcogolic.custom_beer, "good")
         self.assertRaises(AttributeError, getattr, alcogolic, "beer")
         self.assertEqual(alcogolic.custom_absent, "70%")
@@ -56,44 +66,54 @@ class CustomTestCase(unittest.TestCase):
 
 class DescriptorsTestCase(unittest.TestCase):
     def setUp(self):
+        @dataclass
         class Data:
             num = descriptors.Integer()
             name = descriptors.String()
             price = descriptors.PositiveInteger()
 
-        self.d = Data()
+        self.data = Data()
 
     def test_integer(self):
-        self.d.num = 1
-        self.assertEqual(self.d.num, 1)
+        self.data.num = 1
+        self.assertEqual(self.data.num, 1)
         with self.assertRaises(ValueError):
-            self.d.num = "abc"
+            self.data.num = "abc"
+        self.assertEqual(self.data.num, 1)
         with self.assertRaises(ValueError):
-            self.d.num = 1.1
-        self.d.num = True
-        self.assertTrue(self.d.num)
+            self.data.num = 1.1
+        self.assertEqual(self.data.num, 1)
+        self.data.num = True
+        self.assertTrue(self.data.num)
         with self.assertRaises(ValueError):
-            self.d.num = 1 + 1j
+            self.data.num = 1 + 1j
+        self.assertEqual(self.data.num, 1)
 
     def test_string(self):
-        self.d.name = "abc"
-        self.assertEqual(self.d.name, "abc")
+        self.data.name = "abc"
+        self.assertEqual(self.data.name, "abc")
         with self.assertRaises(ValueError):
-            self.d.name = 1
+            self.data.name = 1
+        self.assertEqual(self.data.name, "abc")
 
     def test_positive_int(self):
-        self.d.price = 1
-        self.assertEqual(self.d.price, 1)
+        self.data.price = 1
+        self.assertEqual(self.data.price, 1)
         with self.assertRaises(ValueError):
-            self.d.price = "abc"
+            self.data.price = "abc"
+        self.assertEqual(self.data.price, 1)
         with self.assertRaises(ValueError):
-            self.d.price = 1.1
+            self.data.price = 1.1
+        self.assertEqual(self.data.price, 1)
         with self.assertRaises(ValueError):
-            self.d.price = 1 + 1j
+            self.data.price = 1 + 1j
+        self.assertEqual(self.data.price, 1)
         with self.assertRaises(ValueError):
-            self.d.price = 0
+            self.data.price = 0
+        self.assertEqual(self.data.price, 1)
         with self.assertRaises(ValueError):
-            self.d.price = -1
+            self.data.price = -1
+        self.assertEqual(self.data.price, 1)
 
 
 if __name__ == "__main__":
