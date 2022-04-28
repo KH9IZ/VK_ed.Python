@@ -75,6 +75,8 @@ class DescriptorsTestCase(unittest.TestCase):
         self.data = Data()
 
     def test_integer(self):
+        self.data.num = 10
+        self.assertEqual(self.data.num, 10)
         self.data.num = 1
         self.assertEqual(self.data.num, 1)
         with self.assertRaises(ValueError):
@@ -83,13 +85,15 @@ class DescriptorsTestCase(unittest.TestCase):
         with self.assertRaises(ValueError):
             self.data.num = 1.1
         self.assertEqual(self.data.num, 1)
-        self.data.num = True
-        self.assertTrue(self.data.num)
+        self.data.num = False
+        self.assertFalse(self.data.num)
         with self.assertRaises(ValueError):
             self.data.num = 1 + 1j
-        self.assertEqual(self.data.num, 1)
+        self.assertFalse(self.data.num)
 
     def test_string(self):
+        self.data.name = "empty"
+        self.assertEqual(self.data.name, "empty")
         self.data.name = "abc"
         self.assertEqual(self.data.name, "abc")
         with self.assertRaises(ValueError):
@@ -97,6 +101,8 @@ class DescriptorsTestCase(unittest.TestCase):
         self.assertEqual(self.data.name, "abc")
 
     def test_positive_int(self):
+        self.data.price = 10
+        self.assertEqual(self.data.price, 10)
         self.data.price = 1
         self.assertEqual(self.data.price, 1)
         with self.assertRaises(ValueError):
