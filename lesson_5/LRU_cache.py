@@ -14,6 +14,7 @@ class LRUCache(collections.UserDict):
         return value
 
     def set(self, key, value):
+        self.data.pop(key, None)
         while len(self) >= self.limit:
             first_key = next(iter(self))
             self.data.pop(first_key)
