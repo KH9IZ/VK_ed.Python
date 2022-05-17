@@ -1,3 +1,0 @@
-https://ya.ru
-https://vk.com
-https://weatherbit-v1-mashape.p.rapidapi.com/forecast/3hourly
