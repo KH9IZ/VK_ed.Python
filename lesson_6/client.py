@@ -4,6 +4,7 @@ from queue import Queue, Empty
 import socket
 import json
 
+
 def worker(q, results):
     while True:
         sock = socket.socket()
@@ -21,6 +22,7 @@ def worker(q, results):
         q.task_done()
         sock.close()
 
+
 if __name__ == "__main__":
     workers_count = int(sys.argv[1])
     filename = sys.argv[2]
@@ -28,11 +30,13 @@ if __name__ == "__main__":
     q = Queue(workers_count)
     results = Queue()
     threads = [
-        threading.Thread(target=worker, args=(q, results), name=f'worker_{i}', daemon=True)
+        threading.Thread(
+            target=worker, args=(q, results), name=f"worker_{i}", daemon=True
+        )
         for i in range(workers_count)
     ]
-    
-    file = open(filename, 'rt')
+
+    file = open(filename, "rt")
     fit = iter(file)
     while not q.full():
         try:
